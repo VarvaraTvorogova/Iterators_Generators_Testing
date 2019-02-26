@@ -10,8 +10,5 @@ def Fibo_generator(upper_limit):
         b = c
         counter +=1
 
-a = Fibo_generator(9)
-for i in a:
-    print (i)
 
 
