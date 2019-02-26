@@ -8,7 +8,7 @@ def Fibo_generator(upper_limit):
         yield c
         a = b
         b = c
-        counter +=1
+        counter += 1
 
 
 
