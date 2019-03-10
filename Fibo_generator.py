@@ -3,7 +3,6 @@ def Fibo_generator(upper_limit):
     a = 0
     b = 1
     while counter <= upper_limit:
-        lst = []
         c = a + b
         yield c
         a = b
