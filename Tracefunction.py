@@ -7,19 +7,3 @@ def tracefoo(function_to_trace):
             print("function:", frame.f_code.co_name, ", local vars:", list(frame.f_locals.keys()))
         return tracefunc
     sys.settrace(tracefunc)
-
-
-def bim():
-    p = "Privet"
-    print(p)
-
-def bom ():
-    print ('hahaha')
-
-
-tracefoo(bim)
-bom()
-bom()
-bim()
-bom()
-bim()
