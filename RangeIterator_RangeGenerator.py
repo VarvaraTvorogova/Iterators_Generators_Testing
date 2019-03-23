@@ -1,87 +1,74 @@
-class RangeFather:
+class RangeBase:
 
     def __init__(self, *args):
         self.args = args
         if len(args) == 0:
             raise Exception('At least one argument required')
         if len(args) == 1:
+            self.begin = 0
             self.current = 0
             self.end = self.args[0]
             self.step = 1
         if len(args) == 2:
+            self.begin = self.args[0]
             self.current = self.args[0]
             self.end = self.args[1]
             self.step = 1
         if len(args) == 3:
             if self.args[2] == 0:
                 raise Exception('Third arg must not be zero')
+            self.begin = self.args[0]
             self.current = self.args[0]
             self.end = self.args[1]
             self.step = self.args[2]
-        self.flag = False
-        self.lst = []
 
 
-class RangeIterator (RangeFather):
+class RangeIterator(RangeBase):
 
     def __iter__(self):
         return self
 
-    def   __next__(self):
-        if not self.flag:
-            self.flag = True
-            if self.current < self.end and self.step > 0 or self.current > self.end and self.step < 0:
-                self.lst.append(self.current)
-                return self.current
-            else:
-                raise StopIteration
+    def __next__(self):
         if self.step > 0:
-            if self.current < self.end - self.step:
+            if self.current < self.end:
                 self.current += self.step
-                self.lst.append(self.current)
-                return self.current
+                return self.current - self.step
             else:
                 raise StopIteration
         else:
-            if self.current > self.end - self.step:
+            if self.current > self.end:
                 self.current += self.step
-                self.lst.append(self.current)
-                return self.current
+                return self.current - self.step
             else:
                 raise StopIteration
 
     def __getitem__(self, index):
-        for i in self:
-            pass
-        return self.lst[index]
+        if index >= 0:
+            return self.begin + index * self.step
+        else:
+            return self.end + index * self.step
 
 
-
-class RangeGenerator (RangeFather):
+class RangeGenerator(RangeBase):
 
     def __iter__(self):
         return RangeGenerator.gener(self)
 
     def gener(self):
-        if not self.flag and self.current < self.end:
-            self.flag = True
-            self.lst.append(self.current)
-            yield self.current
         if self.step > 0:
-            while self.current < self.end - self.step:
+            while self.current < self.end:
                 self.current += self.step
-                self.lst.append(self.current)
-                yield self.current
+                yield self.current - self.step
         else:
-            while self.current > self.end - self.step:
+            while self.current > self.end:
                 self.current += self.step
-                self.lst.append(self.current)
-                yield self.current
+                yield self.current - self.step
 
     def __getitem__(self, index):
-        for i in self:
-            pass
-        return self.lst[index]
+        if index >= 0:
+            return self.begin + index * self.step
+        else:
+            return self.end + index * self.step
 
 
 def genert(*args):
@@ -98,23 +85,15 @@ def genert(*args):
         step = 1
     if len(args) == 3:
         if args[2] == 0:
-            raise Exception('arg 3 must not be zero')
+            raise Exception('Third arg must not be zero')
         current = args[0]
         end = args[1]
         step = args[2]
-    flag = False
-    if not flag and current < end:
-        flag = True
-        yield current
     if step > 0:
-        while current < end - step:
+        while current < end:
             current += step
-            yield current
+            yield current - step
     else:
-        while current > end - step:
+        while current > end:
             current += step
-            yield current
-
-
-
-
+            yield current - step
